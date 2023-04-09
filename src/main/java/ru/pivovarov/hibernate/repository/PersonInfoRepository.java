@@ -1,24 +1,11 @@
 package ru.pivovarov.hibernate.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.pivovarov.hibernate.model.Person;
-
-import java.util.List;
+import ru.pivovarov.hibernate.model.PersonInfo;
 
 @Repository
-public class PersonInfoRepository {
+public interface PersonInfoRepository extends JpaRepository<PersonInfo, Person> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public List<Person> getPersonsByCity(String city){
-        String query = "select person from PersonInfo where city_of_living=" + "'" + city + "'";
-        List<Person> personList = entityManager.createQuery(query,  Person.class).getResultList();
-        for (Person person : personList) {
-            System.out.println(person.toString());
-        }
-        return personList;
-    }
 }

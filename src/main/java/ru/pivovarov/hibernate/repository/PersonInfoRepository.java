@@ -14,11 +14,8 @@ public class PersonInfoRepository {
     private EntityManager entityManager;
 
     public List<Person> getPersonsByCity(String city){
-        String query = "select person from PersonInfo where city_of_living=" + "'" + city + "'";
-        List<Person> personList = entityManager.createQuery(query,  Person.class).getResultList();
-        for (Person person : personList) {
-            System.out.println(person.toString());
-        }
-        return personList;
+        return entityManager.createQuery("select person from PersonInfo where cityOfLiving = :city",  Person.class)
+                .setParameter("city", city)
+                .getResultList();
     }
 }

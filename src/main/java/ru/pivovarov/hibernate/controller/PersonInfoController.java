@@ -1,32 +1,49 @@
 package ru.pivovarov.hibernate.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.pivovarov.hibernate.model.Person;
 import ru.pivovarov.hibernate.model.PersonInfo;
-import ru.pivovarov.hibernate.repository.PersonInfoRepository;
+import ru.pivovarov.hibernate.model.PersonInfoRq;
+import ru.pivovarov.hibernate.service.PersonInfoService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/persons")
 public class PersonInfoController {
 
-    final PersonInfoRepository personInfoRepository;
+    private final PersonInfoService personInfoService;
 
-    public PersonInfoController(PersonInfoRepository personInfoRepository) {
-        this.personInfoRepository = personInfoRepository;
+    @PostMapping("/person")
+    public PersonInfo createPersonInfo(@RequestBody PersonInfoRq personInfoRq) {
+        return personInfoService.createPersonInfo(personInfoRq);
+    }
+
+    @GetMapping("/NameSurname")
+    public Optional<List<PersonInfo>> getPersonInfoByName(@RequestParam String name,
+                                                          @RequestParam String surname) {
+        return personInfoService.getPersonInfoByPerson_NameAndPerson_Surname(name, surname);
     }
 
     @GetMapping("/by-city")
-    @ResponseBody
-    public List<Person> getPersonsByCity() {
-        return null;
+    public List<PersonInfo> getPersonsByCity(@RequestParam String city) {
+        return personInfoService.getPersonInfoByCity(city);
+    }
+
+    @GetMapping("/age")
+    public List<PersonInfo> getPersonsByAge(@RequestParam int age) {
+        return personInfoService.getPersonInfoByPerson_AgeLessThanOrderByPerson_Age(age);
     }
 
     @PutMapping("/person")
-    @ResponseBody
-    public PersonInfo createPersonInfo(String city) {
-        return null;
+    public PersonInfo updatPersonInfo(@RequestBody PersonInfoRq personInfoRq) {
+        return personInfoService.updatePersonInfo(personInfoRq);
+    }
+
+    @DeleteMapping("/person")
+    public void deletePersonInfo(@RequestBody PersonInfoRq personInfoRq) {
+        personInfoService.deletePersonInfoByPerson(personInfoRq);
     }
 }
